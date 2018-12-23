@@ -165,7 +165,7 @@ namespace LumexLDM {
     }
 
     //% blockId="LDM_putString" block="LDM put string: %myStr|size: %mySize|on line: %line|column: %column|color code(0~111): %color"
-    //% weight=90 blockGap=10 blockInlineInputs=true line.min=0 line.max=7 column.min=0 column.max=20 color.min=0 color.max=111
+    //% weight=90 blockGap=10 blockInlineInputs=true line.min=0 line.max=3 column.min=0 column.max=19 color.min=0 color.max=111
     export function LDM_putString(myStr: string, mySize: fontSize, line: number, column: number, color: number): void {
         if (myStr.length > 0) {
             serial.writeString("ATef=(" + color + ")")
