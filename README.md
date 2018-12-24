@@ -1,6 +1,6 @@
 # LumexLDM
 
-這是專為micro:bit提供的LumexLDM顯示積木\
+這是專為micro:bit提供的LumexLDM 64*32 顯示積木\
 This is an extension for the Lumex 64*32 LDM display screen.
 
 ## Author
@@ -25,5 +25,5 @@ Lumex 64*32 LDM is a 64*32 display screen manufactured in Taiwan.\
 (The metadata above is needed for package search.)
 
 ```package
-LumexLDM=github:lioujj/pxt-LumexLDM
+LumexLDM=github:lioujj/pxt-LumexLDM6432
 ```
