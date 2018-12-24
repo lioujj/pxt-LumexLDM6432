@@ -1,4 +1,4 @@
-# LumexLDM
+# LumexLDM6432
 
 這是專為micro:bit提供的LumexLDM 64*32 顯示積木\
 This is an extension for the Lumex 64*32 LDM display screen.
