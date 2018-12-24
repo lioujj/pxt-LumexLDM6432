@@ -1,9 +1,9 @@
 /**
-* LUMEX LDM顯示器的函數
+* LUMEX LDM 64*32 顯示器的函數
 */
 
 //% weight=0 color=#ff9933 icon="\uf233" block="LDM64*32"
-namespace LumexLDM {
+namespace LumexLDM6432 {
 
     export enum fontSize {
         //% block="5*7"
