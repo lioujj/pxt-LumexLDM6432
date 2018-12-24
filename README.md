@@ -25,5 +25,5 @@ Lumex 64*32 LDM is a 64*32 display screen manufactured in Taiwan.\
 (The metadata above is needed for package search.)
 
 ```package
-LumexLDM=github:lioujj/pxt-LumexLDM6432
+LumexLDM6432=github:lioujj/pxt-LumexLDM6432
 ```
