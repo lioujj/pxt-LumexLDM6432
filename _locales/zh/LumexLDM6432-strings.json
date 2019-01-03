@@ -42,7 +42,7 @@
     "LumexLDM6432.LDM_setSerial|block":"設定LDM的RX連接到 %pinRX|TX連接到 %pinTX|連線速率 %br", 
     "LumexLDM6432.LDM_getColor|block":"顏色編碼 %myColor", 
     "LumexLDM6432.LDM_clear|block":"LDM清除畫面",
-    "LumexLDM6432.LDM_putString|block":"顯示字串 %myStr|文字像素大小 %mySize|出現在哪一行(0~7) %line|哪一列 %column|顏色編碼(0~111): %color",
+    "LumexLDM6432.LDM_putString|block":"顯示字串 %myStr|文字像素大小 %mySize|出現在哪一行(0~3) %line|哪一列(0~10) %column|顏色編碼(0~111): %color",
     "LumexLDM6432.LDM_playPage1|block":"顯示第 %myPage|頁，無特效",
     "LumexLDM6432.LDM_playPage2|block":"顯示第 %myPage|頁，效果 %effect|速度(1~10) %speed",
     "LumexLDM6432.LDM_playPages|block":"多頁動畫顯示，共顯示頁數(2~7) %pages|頁面間隔速度(1~10) %period|顯示特效 %effect|顯示速度(1~10) %speed",    
