@@ -146,7 +146,7 @@ namespace LumexLDM6432 {
             pinTX,
             br
         )
-        serial.readUntil("E")
+        //serial.readUntil("E")
         basic.pause(10)
     }
 
