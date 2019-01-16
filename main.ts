@@ -146,8 +146,8 @@ namespace LumexLDM6432 {
             pinTX,
             br
         )
-        //serial.readUntil("E")
-        basic.pause(100)
+        serial.readUntil("E")
+        basic.pause(10)
     }
 
     //% blockId="LDM_getColor" block="color code %myColor"
