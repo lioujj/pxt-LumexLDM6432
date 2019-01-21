@@ -52,6 +52,7 @@
     "LumexLDM6432.LDM_on|block":"開啟LDM",
     "LumexLDM6432.LDM_off|block":"關閉LDM",
     "LumexLDM6432.LDM_setBrightness|block":"設定LDM亮度(0~11) %brightness",
+    "LumexLDM6432.LDM_ATcommand|block":"執行 AT command: %atCommand",
     "LumexLDM6432.LDM_saveToRom|block":"將現在顯示畫面儲存進預設頁面",
     "LumexLDM6432.LDM_drawLine|block":"畫一條直線，起點x座標(0~63) %x0|起點y座標(0~31) %y0|終點x座標(0~63) %x1|終點y座標(0~31) %y1|顏色編碼(0~111): %color",
     "LumexLDM6432.LDM_drawRectangle|block":"畫長方形，是否填滿 %myFilled|左上角x座標(0~63) %x0|左上角y座標(0~31) %y0|右下角x座標(0~63) %x1|右下角y座標(0~31) %y1|顏色編碼(0~111): %color",
