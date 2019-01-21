@@ -284,6 +284,14 @@ namespace LumexLDM6432 {
         basic.pause(3)
     }
 
+    //% blockId="LDM_ATcommand" block="execute AT command: %atCommand"
+    //% weight=35 blockGap=2
+    export function LDM_ATcommand(atCommand: string): void {
+        serial.writeString(atCommand)
+        serial.readUntil("E")
+        basic.pause(3)
+    }
+
     //% blockId="LDM_saveToRom" block="write dipslay contents to current displayed EEPROM page address"
     //% weight=100 blockGap=2 advanced=true
     export function LDM_saveToRom(): void {
