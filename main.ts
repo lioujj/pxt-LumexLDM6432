@@ -170,7 +170,7 @@ namespace LumexLDM6432 {
         if (myStr.length > 0) {
             serial.writeString("ATef=(" + color + ")")
             serial.readUntil("E")
-            basic.pause(3)
+            basic.pause(10)
             if (mySize == 0x81)
                 serial.writeString("AT81=(" + line + "," + column + "," + myStr + ")")
             else if (mySize == 0x83)
