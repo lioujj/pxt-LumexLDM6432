@@ -217,23 +217,23 @@ namespace LumexLDM6432 {
         //清掉特效
         serial.writeString("ATfd=(0)")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
         serial.writeString("ATdf=(" + pages + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
         serial.writeString("ATbe=(" + period + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
         serial.writeString("ATbf=(" + speed + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
         if (effect > 1 && effect < 7)
             effect += 14
         else if (effect > 6 && effect < 16)
             effect += 15
         serial.writeString("ATfd=(" + effect + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_stopPages" block="stop display animation"
@@ -241,7 +241,7 @@ namespace LumexLDM6432 {
     export function LDM_stopPages(): void {
         serial.writeString("ATfd=(0)")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_setBackColor" block="set LDM background color %backColor"
@@ -249,7 +249,7 @@ namespace LumexLDM6432 {
     export function LDM_setBackColor(backColor: number): void {
         serial.writeString("ATec=(" + backColor + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
     
     //% blockId="LDM_display" block="LDM display"
@@ -257,7 +257,7 @@ namespace LumexLDM6432 {
     export function LDM_display(): void {
         serial.writeString("ATd1=()")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
 
@@ -266,7 +266,7 @@ namespace LumexLDM6432 {
     export function LDM_on(): void {
         serial.writeString("ATf1=()")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_off" block="turn LDM off"
@@ -274,7 +274,7 @@ namespace LumexLDM6432 {
     export function LDM_off(): void {
         serial.writeString("ATf0=()")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_setBrightess" block="set LDM brightness(0~11) %brightness"
@@ -282,7 +282,7 @@ namespace LumexLDM6432 {
     export function LDM_setBrightness(brightness: number): void {
         serial.writeString("ATf2=(" + brightness + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_ATcommand" block="execute AT command: %atCommand"
@@ -290,7 +290,7 @@ namespace LumexLDM6432 {
     export function LDM_ATcommand(atCommand: string): void {
         serial.writeString(atCommand)
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_saveToRom" block="write dipslay contents to current displayed EEPROM page address"
@@ -298,7 +298,7 @@ namespace LumexLDM6432 {
     export function LDM_saveToRom(): void {
         serial.writeString("ATfe=()")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_drawLine" block="draw a line|first point X %x0|first point Y %y0|second point X %x1|second point Y %y1|color code(0~111) %color"
@@ -306,7 +306,7 @@ namespace LumexLDM6432 {
     export function LDM_drawLine(x0: number, y0: number, x1: number, y1: number, color: number): void {
         serial.writeString("AT90=(" + x0 + "," + y0 + "," + x1 + "," + y1 + "," + color + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
     //% blockId="LDM_drawRectangle" block="draw a rectangle|filled %myFilled|up left corner X %x0|up left corner Y %y0|bottom right corner X %x1|bottom right corner Y %y1|color code(0~111) %color"
     //% weight=95 blockGap=2 blockInlineInputs=true x0.min=0 x0.max=63 y0.min=0 y0.max=31 x1.min=0 x1.max=63 y1.min=0 y1.max=31 color.min=0 color.max=111 advanced=true
@@ -316,7 +316,7 @@ namespace LumexLDM6432 {
         else
             serial.writeString("AT92=(" + x0 + "," + y0 + "," + x1 + "," + y1 + "," + color + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_drawCircle" block="draw a circle|filled %myFilled|center X %x0|center Y %y0|radius %radius|color code(0~111) %color"
@@ -327,7 +327,7 @@ namespace LumexLDM6432 {
         else
             serial.writeString("AT95=(" + x0 + "," + y0 + "," + radius + "," + color + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_drawSquare" block="draw a square|up left corner X %x0|up left corner Y %y0|width %width|color code(0~111) %color"
@@ -335,7 +335,7 @@ namespace LumexLDM6432 {
     export function LDM_drawSquare(x0: number, y0: number, width: number, color: number): void {
         serial.writeString("AT93=(" + x0 + "," + y0 + "," + width + "," + color + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_setPixel" block="draw a pixel|X %x0|Y %y0|color code(0~111) %color"
@@ -346,7 +346,7 @@ namespace LumexLDM6432 {
         basic.pause(3)
         serial.writeString("AT9e=(" + x0 + "," + y0 + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
     //% blockId="LDM_setScroll" block="scroll the whole display %transition|shift time(1~200ms) %time"
     //% weight=75 blockGap=2 blockInlineInputs=true time.min=1 time.max=200 advanced=true
@@ -357,7 +357,7 @@ namespace LumexLDM6432 {
             time = 200
         serial.writeString("AT" + convertNumToHexStr(transition + 0xd2, 2) + "=(" + time + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_eraseImageInOut" block="erase the whole display %myMove|shift time(1~200ms) %time"
@@ -365,7 +365,7 @@ namespace LumexLDM6432 {
     export function LDM_eraseImageInOut(myMove: moveType, time: number): void {
         serial.writeString("AT" + convertNumToHexStr(myMove + 0xaa, 2) + "=(" + time + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_showImageInOut" block="display the whole display %myMove|shift time(1~200ms) %time"
@@ -373,6 +373,6 @@ namespace LumexLDM6432 {
     export function LDM_showImageInOut(myMove: moveType, time: number): void {
         serial.writeString("AT" + convertNumToHexStr(myMove + 0xa8, 2) + "=(" + time + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 }
