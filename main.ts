@@ -5,6 +5,7 @@
 //% weight=0 color=#ff9933 icon="\uf233" block="LDM64*32"
 namespace LumexLDM6432 {
 
+    let foreColor=111
     export enum fontSize {
         //% block="5*7"
         smallSize = 0x81,
@@ -168,9 +169,12 @@ namespace LumexLDM6432 {
     //% weight=90 blockGap=10 blockInlineInputs=true line.min=0 line.max=3 column.min=0 column.max=19 color.min=0 color.max=111
     export function LDM_putString(myStr: string, mySize: fontSize, line: number, column: number, color: number): void {
         if (myStr.length > 0) {
-            serial.writeString("ATef=(" + color + ")")
-            serial.readUntil("E")
-            basic.pause(10)
+            if(color!=foreColor){
+                serial.writeString("ATef=(" + color + ")")
+                serial.readUntil("E")
+                basic.pause(10)
+                foreColor=color
+            }
             if (mySize == 0x81)
                 serial.writeString("AT81=(" + line + "," + column + "," + myStr + ")")
             else if (mySize == 0x83)
@@ -371,4 +375,4 @@ namespace LumexLDM6432 {
         serial.readUntil("E")
         basic.pause(3)
     }
-}  
+}
