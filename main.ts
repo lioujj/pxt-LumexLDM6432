@@ -148,7 +148,7 @@ namespace LumexLDM6432 {
             br
         )
         serial.readUntil("E")
-        basic.pause(10)
+        basic.pause(20)
     }
 
     //% blockId="LDM_getColor" block="color code %myColor"
@@ -162,7 +162,7 @@ namespace LumexLDM6432 {
     export function LDM_clear(): void {
         serial.writeString("ATd0=()")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_putString" block="LDM put string: %myStr|size: %mySize|on line: %line|column: %column|color code(0~111): %color"
@@ -172,7 +172,7 @@ namespace LumexLDM6432 {
             if(color!=foreColor){
                 serial.writeString("ATef=(" + color + ")")
                 serial.readUntil("E")
-                basic.pause(10)
+                basic.pause(20)
                 foreColor=color
             }
             if (mySize == 0x81)
@@ -180,7 +180,7 @@ namespace LumexLDM6432 {
             else if (mySize == 0x83)
                 serial.writeString("AT83=(" + line + "," + column + "," + myStr + ")")
             serial.readUntil("E")
-            basic.pause(3)
+            basic.pause(20)
         }
     }
 
@@ -189,7 +189,7 @@ namespace LumexLDM6432 {
     export function LDM_playPage1(myPage: number): void {
         serial.writeString("ATfc=(" + myPage + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_playPage2" block="display single page(0~6) stored in the LDM: %myPage|animation %effect|speed(1~10) %speed"
@@ -198,17 +198,17 @@ namespace LumexLDM6432 {
         //清掉特效
         serial.writeString("ATfd=(0)")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
         //設定速度及特效
         serial.writeString("ATbf=(" + speed + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
         serial.writeString("ATfc=(" + myPage + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
         serial.writeString("ATfd=(" + effect + ")")
         serial.readUntil("E")
-        basic.pause(3)
+        basic.pause(20)
     }
 
     //% blockId="LDM_playPages" block="display multi pages stored in the LDM |number of pages(2~7) %pages|page interval period(1~10) %period|animation %effect|animation speed(1~10) %speed"
