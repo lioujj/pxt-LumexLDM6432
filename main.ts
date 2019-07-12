@@ -1,378 +1,346 @@
+
 /**
-* LUMEX LDM 64*32 顯示器的函數
-*/
+ *Obloq implementation method.
+ */
+//% weight=10 color=#096670 icon="\uf1eb" block="Obloq_http"
+namespace Obloq_http {
 
-//% weight=0 color=#ff9933 icon="\uf233" block="LDM64*32"
-namespace LumexLDM6432 {
+    let wInfo: string[][] = [
+        ["weather", "main", "", "s"],
+        ["description", "description", "", "s"],
+        ["temperature", "\"temp\"", "", "k"],
+        ["humidity", "dity", "", "n"],
+        ["temp_min", "temp_min", "", "k"],
+        ["temp_max", "temp_max", "", "k"],
+        ["speed", "speed", "", "n"],
+        ["sunrise", "sunrise", "", "n"],
+        ["sunset", "sunset", "", "n"],
+        ["timezone", "timezone", "", "n"],
+        ["cityName", "name", "", "s"]
+    ]
 
-    let foreColor=111
-    export enum fontSize {
-        //% block="5*7"
-        smallSize = 0x81,
-        //% block="8*16"
-        bigSize = 0x83
-    }
-    export enum showNow {
-        //% block="now"
-        yes = 0xd1,
-        //% block="later"
-        no = 0x00
-    }
-    export enum patternType {
-        //% block="8*8"
-        type1 = 0xc0,
-        //% block="8*16"
-        type2 = 0xc1,
-        //% block="16*16"
-        type3 = 0xc2,
-        //% block="32*32"
-        type4 = 0xc3
-    }
-    export enum positiveType {
-        //% block="positive"
-        type1 = 1,
-        //% block="negative"
-        type2 = 0
-    }
-    export enum filledType {
-        //% block="no"
-        type1 = 0,
-        //% block="yes"
-        type2 = 1
-    }
-    export enum transitionType {
-        //% block="upward"
-        type1 = 0,
-        //% block="downward"
-        type2 = 1,
-        //% block="leftward"
-        type3 = 2,
-        //% block="rightward"
-        type4 = 3
+    export enum wType {
+        //% block="city name"
+        cityName = 10,
+        //% block="weather"
+        weather = 0,
+        //% block="description"
+        description = 1,
+        //% block="temperature"
+        temperature = 2,
+        //% block="humidity"
+        humidity = 3,
+        //% block="low temperature"
+        temp_min = 4,
+        //% block="maximum temperature"
+        temp_max = 5,
+        //% block="wind speed"
+        speed = 6,        
+        //% block="time of sunrise"
+        sunrise = 7,
+        //% block="time of sunset"
+        sunset = 8
     }
 
-    export enum moveType {
-        //% block="inside out"
-        type1 = 0,
-        //% block="outside in"
-        type2 = 1
+    //serial
+    let OBLOQ_SERIAL_INIT = false
+    let OBLOQ_WIFI_CONNECTED = false
+    let OBLOQ_SERIAL_TX = SerialPin.P2
+    let OBLOQ_SERIAL_RX = SerialPin.P1
+    let OBLOQ_WIFI_SSID = ""
+    let OBLOQ_WIFI_PASSWORD = ""
+    let OBLOQ_IP = ""
+    let cityID = ""
+    let weatherKey = ""
+    let aa = 0
+
+    export enum cityIDs {
+        //% block="Taipei"
+        Taipei = 1668341,
+        //% block="Hong Kong"
+        HongKong = 1819729,
+        //% block="Tokyo"
+        Tokyo = 1850147,
+        //% block="Seoul"
+        Seoul = 1835848,
+        //% block="Beijing"
+        Beijing=1816670,
+        //% block="Shanghai"
+        Shanghai=1796236,      
+        //% block="Singapore"
+        Singapore=1880252, 
+        //% block="London"
+        London=2643743, 
+        //% block="Berlin"
+        Berlin=2950159, 
+        //% block="Paris"
+        Paris= 2988507,
+        //% block="New York"
+        NewYork=5128638, 
+        //% block="Sydney"
+        Sydney=2147714 
     }
 
-    export enum colorCode {
-        //% block="black"
-        color0 = 0,
-        //% block="white"
-        color111 = 111,
-        //% block="red"
-        color96 = 96,
-        //% block="orange"
-        color100 = 100,
-        //% block="yellow"
-        color108 = 108,
-        //% block="green"
-        color4 = 4,
-        //% block="blue"
-        color3 = 3,
-        //% block="indigo"
-        color66 = 66,
-        //% block="purple"
-        color99 = 99,
-        //% block="dark red"
-        color32 = 32,
-        //% block="pink"
-        color103 = 103,
-        //% block="earth yellow"
-        color104 = 104,
-        //% block="lime"
-        color12 = 12
+    export enum city2IDs {
+        //% block="Keelung"
+        Keelung = 6724654,
+        //% block="Taipei"
+        Taipei = 1668341,
+        //% block="Xinbei"
+        Xinbei = 1670029,
+        //% block="Taoyuan"
+        Taoyuan = 1667905,
+        //% block="Hsinchu"
+        Hsinchu = 1675107,
+        //% block="Miaoli"
+        Miaoli = 1671971,
+        //% block="Taichung"
+        Taichung = 1668399,
+        //% block="Changhua"
+        Changhua = 1679136,
+        //% block="Nantou"
+        Nantou = 1671564,
+        //% block="Yunlin"
+        Yunlin = 1665194,
+        //% block="Jiayi"
+        Jiayi = 1678836,
+        //% block="Tainan"
+        Tainan = 1668352,
+        //% block="Kaohsiung"
+        Kaohsiung = 7280289,
+        //% block="Pingtung"
+        Pingtung = 1670479,
+        //% block="Yilan"
+        Yilan = 1674197,
+        //% block="Hualien"
+        Hualien = 1674502,
+        //% block="Taitung"
+        Taitung = 1668295,
+        //% block="Penghu"
+        Penghu = 1670651,
+        //% block="Jincheng"
+        Jincheng = 1678008,
+        //% block="Nangan"
+        Nangan = 7552914
     }
 
-    export enum animationType {
-        //% block="fly in and out upward"
-        type1 = 2,
-        //% block="fly in and out downward"
-        type2 = 3,
-        //% block="fly in and out leftward"
-        type3 = 4,
-        //% block="fly in and out rightward"
-        type4 = 5,
-        //% block="blink"
-        type5 = 6,
-        //% block="fly in downward"
-        type6 = 7,
-        //% block="fly in upward"
-        type7 = 8,
-        //% block="fly in rightward"
-        type8 = 9,
-        //% block="fly in leftward"
-        type9 = 10,
-        //% block="fly in down-rightward"
-        type10 = 11,
-        //% block="fly in down-leftward"
-        type11 = 12,
-        //% block="fly in up-rightward"
-        type12 = 13,
-        //% block="fly in up-leftward"
-        type13 = 14,
-        //% block="fly in from each direction"
-        type14 = 15
+    function obloqWriteString(text: string): void {
+        serial.writeString(text)
     }
 
-    function convertNumToHexStr(myNum: number, digits: number): string {
-        let tempDiv = 0
-        let tempMod = 0
-        let myStr = ""
-        tempDiv = myNum
-        while (tempDiv > 0) {
-            tempMod = tempDiv % 16
-            if (tempMod > 9) {
-                myStr = String.fromCharCode(tempMod - 10 + 97) + myStr
-            } else {
-                myStr = tempMod + myStr
-            }
-            tempDiv = Math.idiv(tempDiv, 16)
-        }
-        while (myStr.length != digits) {
-            myStr = "0" + myStr
-        }
-        return myStr
-    }
-
-    //% blockId="LDM_setSerial" block="set LDM RX to %pinRX|TX to %pinTX|BaudRate %br"
-    //% weight=100 blockGap=2 blockInlineInputs=true
-    export function LDM_setSerial(pinRX: SerialPin, pinTX: SerialPin, br: BaudRate): void {
-        basic.pause(300)
+    function Obloq_serial_init(): void {
+        obloqWriteString("123")
+        let item = serial.readString()
+        item = serial.readString()
+        item = serial.readString()
         serial.redirect(
-            pinRX,
-            pinTX,
-            br
+            OBLOQ_SERIAL_TX,
+            OBLOQ_SERIAL_RX,
+            BaudRate.BaudRate9600
         )
-        serial.readUntil("E")
-        basic.pause(20)
+        serial.setRxBufferSize(100)
+        serial.setTxBufferSize(100)
+        obloqWriteString("\r")
+        item = serial.readString()
+        obloqWriteString("|1|1|\r")
+        item = serial.readUntil("\r")
+        item = serial.readString()
+        item = serial.readString()
+        OBLOQ_SERIAL_INIT = true
     }
 
-    //% blockId="LDM_getColor" block="color code %myColor"
-    //% weight=95 blockGap=2
-    export function LDM_getColor(myColor: colorCode): number {
-        return myColor
+    function getTimeStr(myTimes: number): string {
+        let myTimeStr = ""
+        let secs = myTimes % 60
+        let mins = Math.trunc(myTimes / 60)
+        let hours = Math.trunc(mins / 60)
+        mins = mins % 60
+        hours = hours % 24
+        if (hours < 10)
+            myTimeStr = "0" + hours
+        else
+            myTimeStr = "" + hours
+        myTimeStr += ":"
+        if (mins < 10)
+            myTimeStr = myTimeStr + "0" + mins
+        else
+            myTimeStr = myTimeStr + mins
+        myTimeStr += ":"
+        if (secs < 10)
+            myTimeStr = myTimeStr + "0" + secs
+        else
+            myTimeStr = myTimeStr + secs
+        return myTimeStr
     }
 
-    //% blockId="LDM_clear" block="LDM clear"
-    //% weight=93 blockGap=2
-    export function LDM_clear(): void {
-        serial.writeString("ATd0=()")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_putString" block="LDM put string: %myStr|size: %mySize|on line: %line|column: %column|color code(0~111): %color"
-    //% weight=90 blockGap=10 blockInlineInputs=true line.min=0 line.max=3 column.min=0 column.max=19 color.min=0 color.max=111
-    export function LDM_putString(myStr: string, mySize: fontSize, line: number, column: number, color: number): void {
-        if (myStr.length > 0) {
-            if(color!=foreColor){
-                serial.writeString("ATef=(" + color + ")")
-                serial.readUntil("E")
-                basic.pause(20)
-                foreColor=color
+    function Obloq_connect_wifi(): void {
+        if (OBLOQ_SERIAL_INIT) {
+            if (!OBLOQ_SERIAL_INIT) {
+                Obloq_serial_init()
             }
-            if (mySize == 0x81)
-                serial.writeString("AT81=(" + line + "," + column + "," + myStr + ")")
-            else if (mySize == 0x83)
-                serial.writeString("AT83=(" + line + "," + column + "," + myStr + ")")
-            serial.readUntil("E")
-            basic.pause(20)
+            let item = "test"
+            obloqWriteString("|2|1|" + OBLOQ_WIFI_SSID + "," + OBLOQ_WIFI_PASSWORD + "|\r") //Send wifi account and password instructions
+            item = serial.readUntil("\r")
+            while (item.indexOf("|2|3|") < 0) {
+                item = serial.readUntil("\r")
+            }
+            OBLOQ_IP = item.substr(5, item.length - 6)
+            OBLOQ_WIFI_CONNECTED = true
+            basic.showIcon(IconNames.Yes)
+        }
+
+    }
+
+
+    /**
+     * Setup Obloq Tx Rx to micro:bit pins and WIFI SSID, password.
+     * 設定Obloq的Tx、Rx連接腳位，以及WIFI的名稱及密碼
+     * @param SSID to SSID ,eg: "yourSSID"
+     * @param PASSWORD to PASSWORD ,eg: "yourPASSWORD"
+     * @param receive to receive ,eg: SerialPin.P1
+     * @param send to send ,eg: SerialPin.P2
+    */
+    //% weight=100
+    //% receive.fieldEditor="gridpicker" receive.fieldOptions.columns=3
+    //% send.fieldEditor="gridpicker" send.fieldOptions.columns=3
+    //% blockId=Obloq_WIFI_setup
+    //% block="Obloq setup WIFI | Pin set: | Receive data (green wire): %receive| Send data (blue wire): %send | Wi-Fi: | Name: %SSID| Password: %PASSWORD| Start connection"
+    export function Obloq_WIFI_setup(/*serial*/receive: SerialPin, send: SerialPin,
+                                     /*wifi*/SSID: string, PASSWORD: string
+    ):
+        void {
+        basic.showLeds(`
+        . . . . .
+        . . . . .
+        . # # # .
+        . . . . .
+        . . . . .
+        `)
+        OBLOQ_WIFI_SSID = SSID
+        OBLOQ_WIFI_PASSWORD = PASSWORD
+        OBLOQ_SERIAL_TX = send
+        OBLOQ_SERIAL_RX = receive
+        Obloq_serial_init()
+        Obloq_connect_wifi()
+    }
+/*
+    //% weight=99
+    //% blockId=Obloq_serial_disconnect
+    //% block="Obloq serial disconnect"
+    export function Obloq_serial_disconnect(): void {
+        OBLOQ_SERIAL_INIT = false
+    }
+    //% weight=98
+    //% blockId=Obloq_serial_reconnect
+    //% block="Obloq serial reconnect"
+    export function Obloq_serial_reconnect(): void {
+        Obloq_serial_init()
+    }
+*/
+    //% weight=97
+    //% blockId=getObloq_IP
+    //% block="get Obloq IP address"
+    export function getObloq_IP(): string {
+        if (OBLOQ_SERIAL_INIT && OBLOQ_WIFI_CONNECTED)
+            return OBLOQ_IP
+        else
+            return ""
+    }
+    //% weight=95
+    //% blockId=getCityID
+    //% block="get City ID of %myCity"
+    export function getCityID(myCity: cityIDs): string {
+        return ("" + myCity)
+    }
+ 
+    //% weight=94
+    //% blockId=getCity2ID
+    //% block="get City ID of %myCity | in Taiwan"
+    export function getCity2ID(myCity: city2IDs): string {
+        return ("" + myCity)
+    }
+
+    //% weight=93
+    //% blockId=getWeatherInfo
+    //% block="get weather data: %myInfo"
+    export function getWeatherInfo(myInfo: wType): string {
+        return wInfo[myInfo][2]
+    }
+
+    /**
+     * connect to https://openweathermap.org/ to get the weather information
+     * You have to enter the City ID and your access key of the website
+     * 連接到 https://openweathermap.org/ 取得氣象資訊
+     * 你必須輸入城市編號以及你在這個網站註冊取得的存取密碼才能查詢該城市的氣象資訊
+     * @param myID to myID ,eg: "City Number"
+     * @param myKey to myKey ,eg: "access key"
+    */
+    //% weight=96
+    //% blockId=setWeatherHttp
+    //% block="set city ID to get the weather: %myID | your OpenWeatherMap key %myKey"
+    export function setWeatherHttp(myID: string, myKey: string): void {
+        Obloq_serial_init()
+        basic.showLeds(`
+        . . . . .
+        . . . . .
+        . # # # .
+        . . . . .
+        . . . . .
+        `)
+        cityID = myID
+        weatherKey = myKey
+        let item = ""
+        let returnCode = ""
+        let tempNumber = 0
+        let tempStr = ""
+        let myUrl = "http://api.openweathermap.org:80/data/2.5/weather?id=" + cityID + "&appid=" + weatherKey
+        serial.readString()
+        obloqWriteString("|3|1|" + myUrl + "|\r")
+        for (let i = 0; i < 3; i++) {
+            returnCode = serial.readUntil("|")
+        }
+        if (returnCode == "200") {
+            for (let i = 0; i < wInfo.length; i++) {
+                item = serial.readUntil(":")
+                while (item.indexOf(wInfo[i][1]) < 0) {
+                    item = serial.readUntil(":")
+                }
+                item = serial.readUntil(",")
+                switch (wInfo[i][3]) {
+                    case "s":
+                        wInfo[i][2] = item.substr(1, item.length - 2)
+                        break
+                    case "k":
+                        if (item.indexOf("}") != -1) {
+                            item = item.substr(0, item.length - 1)
+                        }
+                        wInfo[i][2] = "" + Math.round(parseFloat(item) - 273.15)
+                        break
+                    case "n":
+                        if (item.indexOf("}") != -1) {
+                            item = item.substr(0, item.length - 1)
+                        }
+                        wInfo[i][2] = item
+                        break
+                    default:
+                        wInfo[i][2] = item.substr(1, item.length - 2)
+                }
+            }
+            let riseTime = parseFloat(wInfo[7][2])
+            let setTime = parseFloat(wInfo[8][2])
+            let timeZone = parseFloat(wInfo[9][2])
+            riseTime += timeZone
+            setTime += timeZone
+            wInfo[7][2] = getTimeStr(riseTime)
+            wInfo[8][2] = getTimeStr(setTime)
+            basic.showIcon(IconNames.Yes)
+        }
+        else {
+            for (let i = 0; i < wInfo.length; i++) {
+                wInfo[i][2] = ""
+            }
+            basic.showIcon(IconNames.No)
         }
     }
 
-    //% blockId="LDM_playPage1" block="display single page(0~6) stored in the LDM without animation: %myPage"
-    //% weight=85 blockGap=2 blockInlineInputs=true myPage.min=0 myPage.max=6
-    export function LDM_playPage1(myPage: number): void {
-        serial.writeString("ATfc=(" + myPage + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_playPage2" block="display single page(0~6) stored in the LDM: %myPage|animation %effect|speed(1~10) %speed"
-    //% weight=80 blockGap=2 blockInlineInputs=true myPage.min=0 myPage.max=6 effect.min=1 effect.max=15 speed.min=1 speed.max=10
-    export function LDM_playPage2(myPage: number, effect: animationType, speed: number): void {
-        //清掉特效
-        serial.writeString("ATfd=(0)")
-        serial.readUntil("E")
-        basic.pause(20)
-        //設定速度及特效
-        serial.writeString("ATbf=(" + speed + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-        serial.writeString("ATfc=(" + myPage + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-        serial.writeString("ATfd=(" + effect + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_playPages" block="display multi pages stored in the LDM |number of pages(2~7) %pages|page interval period(1~10) %period|animation %effect|animation speed(1~10) %speed"
-    //% weight=75 blockGap=2 blockInlineInputs=true pages.min=2 pages.max=7 effect.min=16 effect.max=30 period.min=1 period.max=10 speed.min=1 speed.max=10
-    export function LDM_playPages(pages: number, period: number, effect: animationType, speed: number): void {
-        //清掉特效
-        serial.writeString("ATfd=(0)")
-        serial.readUntil("E")
-        basic.pause(20)
-        serial.writeString("ATdf=(" + pages + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-        serial.writeString("ATbe=(" + period + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-        serial.writeString("ATbf=(" + speed + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-        if (effect > 1 && effect < 7)
-            effect += 14
-        else if (effect > 6 && effect < 16)
-            effect += 15
-        serial.writeString("ATfd=(" + effect + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_stopPages" block="stop display animation"
-    //% weight=70 blockGap=10 blockInlineInputs=true
-    export function LDM_stopPages(): void {
-        serial.writeString("ATfd=(0)")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_setBackColor" block="set LDM background color %backColor"
-    //% weight=60 blockGap=2 backColor.min=0 backcolor.max=111 
-    export function LDM_setBackColor(backColor: number): void {
-        serial.writeString("ATec=(" + backColor + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-    
-    //% blockId="LDM_display" block="LDM display"
-    //% weight=55 blockGap=2
-    export function LDM_display(): void {
-        serial.writeString("ATd1=()")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-
-    //% blockId="LDM_on" block="turn LDM on"
-    //% weight=50 blockGap=2
-    export function LDM_on(): void {
-        serial.writeString("ATf1=()")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_off" block="turn LDM off"
-    //% weight=45 blockGap=2
-    export function LDM_off(): void {
-        serial.writeString("ATf0=()")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_setBrightess" block="set LDM brightness(0~11) %brightness"
-    //% weight=40 blockGap=2 brightness.min=0 brightness.max=11
-    export function LDM_setBrightness(brightness: number): void {
-        serial.writeString("ATf2=(" + brightness + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_ATcommand" block="execute AT command: %atCommand"
-    //% weight=35 blockGap=2
-    export function LDM_ATcommand(atCommand: string): void {
-        serial.writeString(atCommand)
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_saveToRom" block="write dipslay contents to current displayed EEPROM page address"
-    //% weight=100 blockGap=2 advanced=true
-    export function LDM_saveToRom(): void {
-        serial.writeString("ATfe=()")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_drawLine" block="draw a line|first point X %x0|first point Y %y0|second point X %x1|second point Y %y1|color code(0~111) %color"
-    //% weight=98 blockGap=2 blockInlineInputs=true x0.min=0 x0.max=63 y0.min=0 y0.max=31 x1.min=0 x1.max=63 y1.min=0 y1.max=31 color.min=0 color.max=111 advanced=true
-    export function LDM_drawLine(x0: number, y0: number, x1: number, y1: number, color: number): void {
-        serial.writeString("AT90=(" + x0 + "," + y0 + "," + x1 + "," + y1 + "," + color + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-    //% blockId="LDM_drawRectangle" block="draw a rectangle|filled %myFilled|up left corner X %x0|up left corner Y %y0|bottom right corner X %x1|bottom right corner Y %y1|color code(0~111) %color"
-    //% weight=95 blockGap=2 blockInlineInputs=true x0.min=0 x0.max=63 y0.min=0 y0.max=31 x1.min=0 x1.max=63 y1.min=0 y1.max=31 color.min=0 color.max=111 advanced=true
-    export function LDM_drawRectangle(myFilled: filledType, x0: number, y0: number, x1: number, y1: number, color: number): void {
-        if (myFilled == 0)
-            serial.writeString("AT91=(" + x0 + "," + y0 + "," + x1 + "," + y1 + "," + color + ")")
-        else
-            serial.writeString("AT92=(" + x0 + "," + y0 + "," + x1 + "," + y1 + "," + color + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_drawCircle" block="draw a circle|filled %myFilled|center X %x0|center Y %y0|radius %radius|color code(0~111) %color"
-    //% weight=90 blockGap=2 blockInlineInputs=true x0.min=0 x0.max=63 y0.min=0 y0.max=31 color.min=0 color.max=111 advanced=true
-    export function LDM_drawCircle(myFilled: filledType, x0: number, y0: number, radius: number, color: number): void {
-        if (myFilled == 0)
-            serial.writeString("AT94=(" + x0 + "," + y0 + "," + radius + "," + color + ")")
-        else
-            serial.writeString("AT95=(" + x0 + "," + y0 + "," + radius + "," + color + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_drawSquare" block="draw a square|up left corner X %x0|up left corner Y %y0|width %width|color code(0~111) %color"
-    //% weight=85 blockGap=2 blockInlineInputs=true x0.min=0 x0.max=63 y0.min=0 y0.max=31 color.min=0 color.max=111 advanced=true
-    export function LDM_drawSquare(x0: number, y0: number, width: number, color: number): void {
-        serial.writeString("AT93=(" + x0 + "," + y0 + "," + width + "," + color + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_setPixel" block="draw a pixel|X %x0|Y %y0|color code(0~111) %color"
-    //% weight=80 blockGap=10 blockInlineInputs=true x0.min=0 x0.max=63 y0.min=0 y0.max=31 color.min=0 color.max=111 advanced=true
-    export function LDM_setPixel(x0: number, y0: number, color: number): void {
-        serial.writeString("ATef=(" + color + ")")
-        serial.readUntil("E")
-        basic.pause(3)
-        serial.writeString("AT9e=(" + x0 + "," + y0 + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-    //% blockId="LDM_setScroll" block="scroll the whole display %transition|shift time(1~200ms) %time"
-    //% weight=75 blockGap=2 blockInlineInputs=true time.min=1 time.max=200 advanced=true
-    export function LDM_setScroll(transition: transitionType, time: number): void {
-        if (time < 1)
-            time = 1
-        if (time > 200)
-            time = 200
-        serial.writeString("AT" + convertNumToHexStr(transition + 0xd2, 2) + "=(" + time + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_eraseImageInOut" block="erase the whole display %myMove|shift time(1~200ms) %time"
-    //% weight=70 blockGap=2 time.min=1 time.max=200 blockInlineInputs=true advanced=true
-    export function LDM_eraseImageInOut(myMove: moveType, time: number): void {
-        serial.writeString("AT" + convertNumToHexStr(myMove + 0xaa, 2) + "=(" + time + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
-
-    //% blockId="LDM_showImageInOut" block="display the whole display %myMove|shift time(1~200ms) %time"
-    //% weight=65 blockGap=2 time.min=1 time.max=200 blockInlineInputs=true advanced=true
-    export function LDM_showImageInOut(myMove: moveType, time: number): void {
-        serial.writeString("AT" + convertNumToHexStr(myMove + 0xa8, 2) + "=(" + time + ")")
-        serial.readUntil("E")
-        basic.pause(20)
-    }
 }
